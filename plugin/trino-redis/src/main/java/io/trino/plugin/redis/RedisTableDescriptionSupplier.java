@@ -69,11 +69,13 @@ public class RedisTableDescriptionSupplier
                 if (file.isFile() && file.getName().endsWith(".json")) {
                     try (InputStream stream = new FileInputStream(file)) {
                         RedisTableDescription table = tableDescriptionCodec.fromJson(stream);
-                        String schemaName = firstNonNull(table.schemaName(), defaultSchema);
-                        log.debug("Redis table %s.%s: %s", schemaName, table.tableName(), table);
-                        // Register the original case table name
-                        RedisTableCaseMapping.registerTableName(schemaName, table.tableName());
-                        builder.put(new SchemaTableName(schemaName, table.tableName()), table);
+                        String originalSchemaName = table.schemaName();
+                        String originalTableName = table.tableName();
+                        String schemaName = firstNonNull(originalSchemaName, defaultSchema);    
+                        log.debug("Redis table %s.%s: %s", schemaName, originalTableName, table);
+                        RedisTableCaseMapping.registerNames(schemaName, originalTableName);
+                        builder.put(new SchemaTableName(schemaName, originalTableName), table);
+
                     }
                 }
             }
@@ -84,14 +86,19 @@ public class RedisTableDescriptionSupplier
 
             for (String definedTable : tableNames) {
                 SchemaTableName tableName;
+                String originalSchemaName = defaultSchema;
+                String originalTableName = definedTable;
                 try {
                     tableName = parseTableName(definedTable);
+                    List<String> originalParts = Splitter.on('.').splitToList(definedTable);
+                    originalSchemaName = originalParts.get(0);
+                    originalTableName = originalParts.get(1);
                 }
                 catch (IllegalArgumentException iae) {
-                    tableName = new SchemaTableName(defaultSchema, definedTable);
-                    // Register the original case table name
-                    RedisTableCaseMapping.registerTableName(defaultSchema, definedTable);
+                    tableName = new SchemaTableName(originalSchemaName, originalTableName);
                 }
+
+                RedisTableCaseMapping.registerNames(originalSchemaName, originalTableName);
 
                 if (!tableDefinitions.containsKey(tableName)) {
                     // A dummy table definition only supports the internal columns.

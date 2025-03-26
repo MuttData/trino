@@ -42,6 +42,7 @@ public final class RedisSplit
 
     private final String schemaName;
     private final String tableName;
+    private final String originalSchemaName;
     private final String originalTableName;
     private final String keyDataFormat;
     private final String keyName;
@@ -68,13 +69,17 @@ public final class RedisSplit
             @JsonProperty("start") long start,
             @JsonProperty("end") long end,
             @JsonProperty("nodes") List<HostAddress> nodes,
+            @JsonProperty("originalSchemaName") String originalSchemaName,
             @JsonProperty("originalTableName") String originalTableName)
     {
         this.schemaName = requireNonNull(schemaName, "schemaName is null");
         this.tableName = requireNonNull(tableName, "tableName is null");
+        this.originalSchemaName = originalSchemaName != null
+                ? originalSchemaName
+                : RedisTableCaseMapping.getOriginalSchemaName(schemaName);
         this.originalTableName = originalTableName != null
-            ? originalTableName
-            : RedisTableCaseMapping.getOriginalTableName(schemaName, tableName);
+                ? originalTableName
+                : RedisTableCaseMapping.getOriginalTableName(schemaName, tableName);
         this.keyDataFormat = requireNonNull(keyDataFormat, "keyDataFormat is null");
         this.valueDataFormat = requireNonNull(valueDataFormat, "valueDataFormat is null");
         this.keyName = keyName;
@@ -99,8 +104,9 @@ public final class RedisSplit
             List<HostAddress> nodes)
     {
         this(schemaName, tableName, keyDataFormat, valueDataFormat, keyName,
-             constraint, start, end, nodes,
-             RedisTableCaseMapping.getOriginalTableName(schemaName, tableName));
+                constraint, start, end, nodes,
+                RedisTableCaseMapping.getOriginalSchemaName(schemaName),
+                RedisTableCaseMapping.getOriginalTableName(schemaName, tableName));
     }
 
     @JsonProperty
@@ -113,6 +119,12 @@ public final class RedisSplit
     public String getTableName()
     {
         return tableName;
+    }
+
+    @JsonProperty
+    public String getOriginalSchemaName()
+    {
+        return originalSchemaName;
     }
 
     @JsonProperty

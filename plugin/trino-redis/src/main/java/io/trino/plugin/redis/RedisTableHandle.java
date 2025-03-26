@@ -36,6 +36,7 @@ public record RedisTableHandle(
         String valueDataFormat,
         String keyName,
         TupleDomain<ColumnHandle> constraint,
+        String originalSchemaName,
         String originalTableName)
         implements ConnectorTableHandle
 {
@@ -47,6 +48,7 @@ public record RedisTableHandle(
             @JsonProperty("valueDataFormat") String valueDataFormat,
             @JsonProperty("keyName") String keyName,
             @JsonProperty("constraint") TupleDomain<ColumnHandle> constraint,
+            @JsonProperty("originalSchemaName") String originalSchemaName,
             @JsonProperty("originalTableName") String originalTableName)
     {
         this.schemaName = requireNonNull(schemaName, "schemaName is null");
@@ -54,6 +56,7 @@ public record RedisTableHandle(
         this.keyDataFormat = requireNonNull(keyDataFormat, "keyDataFormat is null");
         this.valueDataFormat = requireNonNull(valueDataFormat, "valueDataFormat is null");
         this.constraint = requireNonNull(constraint, "constraint is null");
+        this.originalSchemaName = originalSchemaName != null ? originalSchemaName : schemaName;
         this.originalTableName = originalTableName != null ? originalTableName : tableName;
         this.keyName = keyName;
     }
@@ -67,8 +70,9 @@ public record RedisTableHandle(
             String keyName,
             TupleDomain<ColumnHandle> constraint)
     {
-        this(schemaName, tableName, keyDataFormat, valueDataFormat, keyName, constraint,
-             RedisTableCaseMapping.getOriginalTableName(schemaName, tableName));
+        this(schemaName, tableName, keyDataFormat, valueDataFormat, keyName, constraint, 
+                RedisTableCaseMapping.getOriginalSchemaName(schemaName),
+                RedisTableCaseMapping.getOriginalTableName(schemaName, tableName));
     }
 
     public SchemaTableName toSchemaTableName()
@@ -76,8 +80,8 @@ public record RedisTableHandle(
         return new SchemaTableName(schemaName, tableName);
     }
 
-    @JsonProperty
-    public String getOriginalTableName() {
-        return originalTableName;
-    }
+    // @JsonProperty
+    // public String getOriginalTableName() {
+    //     return originalTableName;
+    // }
 }

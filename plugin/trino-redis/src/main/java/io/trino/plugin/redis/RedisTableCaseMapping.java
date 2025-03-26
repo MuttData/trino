@@ -12,28 +12,34 @@
  * limitations under the License.
  */
 package io.trino.plugin.redis;
-import io.airlift.log.Logger;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Locale;
 
 public final class RedisTableCaseMapping {
-    private static final Logger log = Logger.get(RedisTableCaseMapping.class);
+    private static final ConcurrentHashMap<String, String> lowercaseToOriginalSchemaNames = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, String> lowercaseToOriginalTableNames = new ConcurrentHashMap<>();
     
     private RedisTableCaseMapping() {}
     
-    public static void registerTableName(String schemaName, String originalTableName) {
-        String key = createKey(schemaName, originalTableName.toLowerCase(Locale.ENGLISH));
-        lowercaseToOriginalTableNames.put(key, originalTableName);
+    public static void registerNames(String originalSchemaName, String originalTableName) {
+        String schemaKey = originalSchemaName.toLowerCase(Locale.ENGLISH);
+        String tableKey = createKey(schemaKey, originalTableName.toLowerCase(Locale.ENGLISH));
+        
+        lowercaseToOriginalSchemaNames.put(schemaKey, originalSchemaName);
+        lowercaseToOriginalTableNames.put(tableKey, originalTableName);
     }
     
-    public static String getOriginalTableName(String schemaName, String lowercaseTableName) {
-        String key = createKey(schemaName, lowercaseTableName);
-        return lowercaseToOriginalTableNames.getOrDefault(key, lowercaseTableName);
+    public static String getOriginalTableName(String lowercaseSchemaName, String lowercaseTableName) {
+        String tableKey = createKey(lowercaseSchemaName, lowercaseTableName);
+        return lowercaseToOriginalTableNames.getOrDefault(tableKey, lowercaseTableName);
+    }
+    
+    public static String getOriginalSchemaName(String lowercaseSchemaName) {
+        return lowercaseToOriginalSchemaNames.getOrDefault(lowercaseSchemaName, lowercaseSchemaName);
     }
     
     private static String createKey(String schemaName, String tableName) {
-        return schemaName.toLowerCase(Locale.ENGLISH) + ":" + tableName.toLowerCase(Locale.ENGLISH);
+        return schemaName + ":" + tableName;
     }
 }

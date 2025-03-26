@@ -115,10 +115,11 @@ public class RedisMetadata
             keyName = table.key().name();
         }
 
-        // Get the original case table name
+        String originalSchemaName = RedisTableCaseMapping.getOriginalSchemaName(
+                schemaTableName.getSchemaName());
         String originalTableName = RedisTableCaseMapping.getOriginalTableName(
-            schemaTableName.getSchemaName(),
-            schemaTableName.getTableName());
+                schemaTableName.getSchemaName(),
+                schemaTableName.getTableName());
 
         return new RedisTableHandle(
                 schemaTableName.getSchemaName(),
@@ -127,6 +128,7 @@ public class RedisMetadata
                 getDataFormat(table.value()),
                 keyName,
                 TupleDomain.all(),
+                originalSchemaName,
                 originalTableName);
     }
 

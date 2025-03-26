@@ -105,7 +105,8 @@ public class RedisSplitManager
                     startIndex,
                     endIndex,
                     nodes,
-                    redisTableHandle.originalTableName());  // Pass the original case
+                    redisTableHandle.originalSchemaName(),
+                    redisTableHandle.originalTableName());
 
             builder.add(split);
         }

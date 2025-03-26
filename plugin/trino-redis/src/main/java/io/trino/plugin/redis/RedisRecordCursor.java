@@ -352,14 +352,16 @@ public class RedisRecordCursor
             // "default" schema is not prefixed to the key
 
             if (isKeyPrefixSchemaTable) {
-                String keyMatch = "";
+                String keyMatch = EMPTY_STRING;
                 if (!split.getSchemaName().equals("default")) {
-                    keyMatch = split.getSchemaName() + redisKeyDelimiter;
+                    keyMatch = (isUseCaseSensitiveIdentifiersInFilter
+                            ? split.getOriginalSchemaName()
+                            : split.getSchemaName()) + redisKeyDelimiter;
                 }
 
                 String tableName = isUseCaseSensitiveIdentifiersInFilter
-                    ? split.getOriginalTableName()
-                    : split.getTableName();
+                        ? split.getOriginalTableName()
+                        : split.getTableName();
                 keyMatch = keyMatch + tableName + redisKeyDelimiter + "*";
                 scanParams.match(keyMatch);
             }
