@@ -44,6 +44,7 @@ public class RedisJedisManager
     private final int redisMaxKeysPerFetch;
     private final char redisKeyDelimiter;
     private final boolean keyPrefixSchemaTable;
+    private final boolean useCaseSensitiveIdentifiersInFilter;
     private final int redisScanCount;
     private final JedisPoolConfig jedisPoolConfig;
 
@@ -58,6 +59,7 @@ public class RedisJedisManager
         this.redisMaxKeysPerFetch = redisConnectorConfig.getRedisMaxKeysPerFetch();
         this.redisKeyDelimiter = redisConnectorConfig.getRedisKeyDelimiter();
         this.keyPrefixSchemaTable = redisConnectorConfig.isKeyPrefixSchemaTable();
+        this.useCaseSensitiveIdentifiersInFilter = redisConnectorConfig.isUseCaseSensitiveIdentifiersInFilter();
         this.redisScanCount = redisConnectorConfig.getRedisScanCount();
         this.jedisPoolConfig = new JedisPoolConfig();
     }
@@ -88,6 +90,11 @@ public class RedisJedisManager
     public boolean isKeyPrefixSchemaTable()
     {
         return keyPrefixSchemaTable;
+    }
+
+    public boolean isUseCaseSensitiveIdentifiersInFilter()
+    {
+        return useCaseSensitiveIdentifiersInFilter;
     }
 
     public int getRedisScanCount()

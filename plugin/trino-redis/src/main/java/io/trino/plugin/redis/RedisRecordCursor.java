@@ -73,6 +73,7 @@ public class RedisRecordCursor
     private final int maxKeysPerFetch;
     private final char redisKeyDelimiter;
     private final boolean isKeyPrefixSchemaTable;
+    private final boolean isUseCaseSensitiveIdentifiersInFilter;
     private final int redisScanCount;
 
     private ScanResult<String> redisCursor;
@@ -102,6 +103,7 @@ public class RedisRecordCursor
         this.jedisPool = redisJedisManager.getJedisPool(split.getNodes().get(0));
         this.redisKeyDelimiter = redisJedisManager.getRedisKeyDelimiter();
         this.isKeyPrefixSchemaTable = redisJedisManager.isKeyPrefixSchemaTable();
+        this.isUseCaseSensitiveIdentifiersInFilter = redisJedisManager.isUseCaseSensitiveIdentifiersInFilter();
         this.redisScanCount = redisJedisManager.getRedisScanCount();
         this.scanParams = setScanParams();
         this.maxKeysPerFetch = redisJedisManager.getRedisMaxKeysPerFetch();

@@ -51,6 +51,7 @@ public class RedisConnectorConfig
     private Duration tableDescriptionCacheDuration = new Duration(5, MINUTES);
     private boolean hideInternalColumns = true;
     private boolean keyPrefixSchemaTable;
+    private boolean useCaseSensitiveIdentifiersInFilter = false;
 
     @NotNull
     public File getTableDescriptionDir()
@@ -249,5 +250,18 @@ public class RedisConnectorConfig
     private static HostAddress toHostAddress(String value)
     {
         return HostAddress.fromString(value).withDefaultPort(REDIS_DEFAULT_PORT);
+    }
+
+    public boolean isUseCaseSensitiveIdentifiersInFilter()
+    {
+        return useCaseSensitiveIdentifiersInFilter;
+    }
+
+    @Config("redis.use-case-sensistive-identifiers-in-filter")
+    @ConfigDescription("Whether to use case sensitive identifiers (schema and table name) in redis match. Default is no")
+    public RedisConnectorConfig setUseCaseSensitiveIdentifiersInFilter(boolean useCaseSensitiveIdentifiersInFilter)
+    {
+        this.useCaseSensitiveIdentifiersInFilter = useCaseSensitiveIdentifiersInFilter;
+        return this;
     }
 }
