@@ -13,6 +13,8 @@
  */
 package io.trino.plugin.redis;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.trino.spi.connector.ColumnHandle;
 import io.trino.spi.connector.ConnectorTableHandle;
 import io.trino.spi.connector.SchemaTableName;
@@ -33,20 +35,49 @@ public record RedisTableHandle(
         String keyDataFormat,
         String valueDataFormat,
         String keyName,
-        TupleDomain<ColumnHandle> constraint)
+        TupleDomain<ColumnHandle> constraint,
+        String originalTableName)
         implements ConnectorTableHandle
 {
-    public RedisTableHandle
+    @JsonCreator
+    public RedisTableHandle(
+            @JsonProperty("schemaName") String schemaName,
+            @JsonProperty("tableName") String tableName,
+            @JsonProperty("keyDataFormat") String keyDataFormat,
+            @JsonProperty("valueDataFormat") String valueDataFormat,
+            @JsonProperty("keyName") String keyName,
+            @JsonProperty("constraint") TupleDomain<ColumnHandle> constraint,
+            @JsonProperty("originalTableName") String originalTableName)
     {
-        requireNonNull(schemaName, "schemaName is null");
-        requireNonNull(tableName, "tableName is null");
-        requireNonNull(keyDataFormat, "keyDataFormat is null");
-        requireNonNull(valueDataFormat, "valueDataFormat is null");
-        requireNonNull(constraint, "constraint is null");
+        this.schemaName = requireNonNull(schemaName, "schemaName is null");
+        this.tableName = requireNonNull(tableName, "tableName is null");
+        this.keyDataFormat = requireNonNull(keyDataFormat, "keyDataFormat is null");
+        this.valueDataFormat = requireNonNull(valueDataFormat, "valueDataFormat is null");
+        this.constraint = requireNonNull(constraint, "constraint is null");
+        this.originalTableName = originalTableName != null ? originalTableName : tableName;
+        this.keyName = keyName;
+    }
+
+    // Constructor overload for backward compatibility
+    public RedisTableHandle(
+            String schemaName,
+            String tableName,
+            String keyDataFormat,
+            String valueDataFormat,
+            String keyName,
+            TupleDomain<ColumnHandle> constraint)
+    {
+        this(schemaName, tableName, keyDataFormat, valueDataFormat, keyName, constraint,
+             RedisTableCaseMapping.getOriginalTableName(schemaName, tableName));
     }
 
     public SchemaTableName toSchemaTableName()
     {
         return new SchemaTableName(schemaName, tableName);
+    }
+
+    @JsonProperty
+    public String getOriginalTableName() {
+        return originalTableName;
     }
 }

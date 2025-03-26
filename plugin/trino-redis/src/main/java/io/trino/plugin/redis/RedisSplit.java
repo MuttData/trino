@@ -42,6 +42,7 @@ public final class RedisSplit
 
     private final String schemaName;
     private final String tableName;
+    private final String originalTableName;
     private final String keyDataFormat;
     private final String keyName;
     private final String valueDataFormat;
@@ -66,10 +67,14 @@ public final class RedisSplit
             @JsonProperty("constraint") TupleDomain<ColumnHandle> constraint,
             @JsonProperty("start") long start,
             @JsonProperty("end") long end,
-            @JsonProperty("nodes") List<HostAddress> nodes)
+            @JsonProperty("nodes") List<HostAddress> nodes,
+            @JsonProperty("originalTableName") String originalTableName)
     {
         this.schemaName = requireNonNull(schemaName, "schemaName is null");
         this.tableName = requireNonNull(tableName, "tableName is null");
+        this.originalTableName = originalTableName != null
+            ? originalTableName
+            : RedisTableCaseMapping.getOriginalTableName(schemaName, tableName);
         this.keyDataFormat = requireNonNull(keyDataFormat, "keyDataFormat is null");
         this.valueDataFormat = requireNonNull(valueDataFormat, "valueDataFormat is null");
         this.keyName = keyName;
@@ -79,6 +84,23 @@ public final class RedisSplit
         this.end = end;
         this.valueDataType = toRedisDataType(valueDataFormat);
         this.keyDataType = toRedisDataType(keyDataFormat);
+    }
+
+    // Constructor overload for backward compatibility
+    public RedisSplit(
+            String schemaName,
+            String tableName,
+            String keyDataFormat,
+            String valueDataFormat,
+            String keyName,
+            TupleDomain<ColumnHandle> constraint,
+            long start,
+            long end,
+            List<HostAddress> nodes)
+    {
+        this(schemaName, tableName, keyDataFormat, valueDataFormat, keyName,
+             constraint, start, end, nodes,
+             RedisTableCaseMapping.getOriginalTableName(schemaName, tableName));
     }
 
     @JsonProperty
@@ -91,6 +113,12 @@ public final class RedisSplit
     public String getTableName()
     {
         return tableName;
+    }
+
+    @JsonProperty
+    public String getOriginalTableName()
+    {
+        return originalTableName;
     }
 
     @JsonProperty

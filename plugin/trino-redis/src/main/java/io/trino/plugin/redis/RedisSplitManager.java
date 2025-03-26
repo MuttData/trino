@@ -104,7 +104,8 @@ public class RedisSplitManager
                     redisTableHandle.constraint(),
                     startIndex,
                     endIndex,
-                    nodes);
+                    nodes,
+                    redisTableHandle.originalTableName());  // Pass the original case
 
             builder.add(split);
         }

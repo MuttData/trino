@@ -115,13 +115,19 @@ public class RedisMetadata
             keyName = table.key().name();
         }
 
+        // Get the original case table name
+        String originalTableName = RedisTableCaseMapping.getOriginalTableName(
+            schemaTableName.getSchemaName(),
+            schemaTableName.getTableName());
+
         return new RedisTableHandle(
                 schemaTableName.getSchemaName(),
                 schemaTableName.getTableName(),
                 getDataFormat(table.key()),
                 getDataFormat(table.value()),
                 keyName,
-                TupleDomain.all());
+                TupleDomain.all(),
+                originalTableName);
     }
 
     private static String getDataFormat(RedisTableFieldGroup fieldGroup)

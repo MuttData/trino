@@ -71,6 +71,8 @@ public class RedisTableDescriptionSupplier
                         RedisTableDescription table = tableDescriptionCodec.fromJson(stream);
                         String schemaName = firstNonNull(table.schemaName(), defaultSchema);
                         log.debug("Redis table %s.%s: %s", schemaName, table.tableName(), table);
+                        // Register the original case table name
+                        RedisTableCaseMapping.registerTableName(schemaName, table.tableName());
                         builder.put(new SchemaTableName(schemaName, table.tableName()), table);
                     }
                 }
@@ -87,6 +89,8 @@ public class RedisTableDescriptionSupplier
                 }
                 catch (IllegalArgumentException iae) {
                     tableName = new SchemaTableName(defaultSchema, definedTable);
+                    // Register the original case table name
+                    RedisTableCaseMapping.registerTableName(defaultSchema, definedTable);
                 }
 
                 if (!tableDefinitions.containsKey(tableName)) {
