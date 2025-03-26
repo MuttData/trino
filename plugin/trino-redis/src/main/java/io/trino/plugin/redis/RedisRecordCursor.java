@@ -356,7 +356,11 @@ public class RedisRecordCursor
                 if (!split.getSchemaName().equals("default")) {
                     keyMatch = split.getSchemaName() + redisKeyDelimiter;
                 }
-                keyMatch = keyMatch + split.getTableName() + redisKeyDelimiter + "*";
+
+                String tableName = isUseCaseSensitiveIdentifiersInFilter
+                    ? split.getOriginalTableName()
+                    : split.getTableName();
+                keyMatch = keyMatch + tableName + redisKeyDelimiter + "*";
                 scanParams.match(keyMatch);
             }
             return scanParams;
