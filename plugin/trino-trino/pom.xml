@@ -13,8 +13,11 @@
     <packaging>trino-plugin</packaging>
     <description>Trino to Trino Connector</description>
 
-    <properties>
+    <!-- <properties>
         <air.main.basedir>${project.parent.basedir}</air.main.basedir>
+    </properties> -->
+    <properties>
+        <air.compiler.fail-warnings>true</air.compiler.fail-warnings>
     </properties>
 
     <dependencies>
