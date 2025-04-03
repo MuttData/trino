@@ -13,10 +13,8 @@
     <packaging>trino-plugin</packaging>
     <description>Trino to Trino Connector</description>
 
-    <!-- <properties>
-        <air.main.basedir>${project.parent.basedir}</air.main.basedir>
-    </properties> -->
     <properties>
+        <air.main.basedir>${project.parent.basedir}</air.main.basedir>
         <air.compiler.fail-warnings>true</air.compiler.fail-warnings>
     </properties>
 
@@ -87,6 +85,12 @@
         <dependency>
             <groupId>io.opentelemetry</groupId>
             <artifactId>opentelemetry-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-api-incubator</artifactId>
             <scope>provided</scope>
         </dependency>
 
