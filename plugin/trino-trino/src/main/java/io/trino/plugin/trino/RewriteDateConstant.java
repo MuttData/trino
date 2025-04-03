@@ -18,6 +18,7 @@ import com.google.common.collect.ImmutableList;
 import io.trino.matching.Captures;
 import io.trino.matching.Pattern;
 import io.trino.plugin.base.expression.ConnectorExpressionRule;
+import io.trino.plugin.jdbc.expression.ParameterizedExpression;
 import io.trino.spi.expression.Constant;
 import io.trino.spi.type.DateType;
 import io.trino.spi.type.Type;

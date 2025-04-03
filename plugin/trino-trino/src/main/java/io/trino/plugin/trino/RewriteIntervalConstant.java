@@ -20,6 +20,7 @@ import io.trino.matching.Pattern;
 import io.trino.matching.Property;
 import io.trino.plugin.base.expression.ConnectorExpressionPatterns;
 import io.trino.plugin.base.expression.ConnectorExpressionRule;
+import io.trino.plugin.jdbc.expression.ParameterizedExpression;
 import io.trino.plugin.jdbc.QueryParameter;
 import io.trino.spi.expression.Constant;
 import io.trino.spi.type.Type;

@@ -11,7 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 // Originally this goes to trino-base-jdbc
 package io.trino.plugin.trino;
 
@@ -19,6 +18,7 @@ import io.trino.matching.Capture;
 import io.trino.matching.Captures;
 import io.trino.matching.Pattern;
 import io.trino.plugin.base.expression.ConnectorExpressionRule;
+import io.trino.plugin.jdbc.expression.ParameterizedExpression;
 import io.trino.spi.connector.ConnectorSession;
 import io.trino.spi.expression.Call;
 import io.trino.spi.expression.ConnectorExpression;
