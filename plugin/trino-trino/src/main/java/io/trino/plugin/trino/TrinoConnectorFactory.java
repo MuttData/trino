@@ -23,6 +23,6 @@ public class TrinoConnectorFactory
 {
     public TrinoConnectorFactory()
     {
-        super("trino", combine(new TrinoRemoteAuthenticationModule(), new TrinoRemoteClientModule()));
+        super("trino", () -> combine(new TrinoRemoteAuthenticationModule(), new TrinoRemoteClientModule()));
     }
 }
