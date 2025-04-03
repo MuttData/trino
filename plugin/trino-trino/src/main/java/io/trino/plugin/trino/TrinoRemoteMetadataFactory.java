@@ -32,15 +32,16 @@ public class TrinoRemoteMetadataFactory
     private final TimestampTimeZoneDomain timestampTimeZoneDomain;
 
     @Inject
-    public TrinoRemoteMetadataFactory(JdbcClient jdbcClient, TimestampTimeZoneDomain timestampTimeZoneDomain, Set<JdbcQueryEventListener> jdbcQueryEventListeners)
+    public TrinoRemoteMetadataFactory(JdbcClient jdbcClient, TimestampTimeZoneDomain timestampTimeZoneDomain, Set<JdbcQueryEventListener> jdbcQueryEventListeners, IdentityCacheMapping identityCacheMapping)
     {
-        super(jdbcClient, timestampTimeZoneDomain, jdbcQueryEventListeners);
+        super(jdbcClient, timestampTimeZoneDomain, jdbcQueryEventListeners, identityCacheMapping);
+        this.timestampTimeZoneDomain =  requireNonNull(timestampTimeZoneDomain, "timestampTimeZoneDomain is null");
         this.jdbcQueryEventListeners = ImmutableSet.copyOf(requireNonNull(jdbcQueryEventListeners, "jdbcQueryEventListeners is null"));
-        this.timestampTimeZoneDomain = timestampTimeZoneDomain;
     }
 
+    @Override
     protected JdbcMetadata create(JdbcClient transactionCachingJdbcClient)
     {
-        return new TrinoRemoteMetadata(transactionCachingJdbcClient, this.timestampTimeZoneDomain, this.jdbcQueryEventListeners);
+        return new TrinoRemoteMetadata(transactionCachingJdbcClient, timestampTimeZoneDomain, jdbcQueryEventListeners);
     }
 }

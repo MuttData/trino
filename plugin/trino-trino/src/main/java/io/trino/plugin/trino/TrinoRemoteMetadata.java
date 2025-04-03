@@ -56,17 +56,18 @@ public class TrinoRemoteMetadata
         this.precalculateStatisticsForPushdown = precalculateStatisticsForPushdown;
     }
 
-    @Override
-    public Map<String, ColumnHandle> getColumnHandles(ConnectorSession session, ConnectorTableHandle tableHandle)
-    {
-        if (tableHandle instanceof JdbcProcedureHandle procedureHandle) {
-            return procedureHandle.getColumns().orElseThrow().stream()
-                    .collect(toImmutableMap(columnHandle -> columnHandle.getColumnMetadata().getName(), identity()));
-        }
+    // @Override
+    // public Map<String, ColumnHandle> getColumnHandles(ConnectorSession session, ConnectorTableHandle tableHandle)
+    // {
+    //     if (tableHandle instanceof JdbcProcedureHandle procedureHandle) {
+    //         return procedureHandle.getColumns().orElseThrow().stream()
+    //                 .collect(toImmutableMap(columnHandle -> columnHandle.getColumnMetadata().getName(), identity()));
+    //     }
 
-        return jdbcClient.getColumns(session, (JdbcTableHandle) tableHandle).stream()
-                .collect(toImmutableMap(columnHandle -> columnHandle.getColumnMetadata().getName(), identity()));
-    }
+    //     // return jdbcClient.getColumns(session, (JdbcTableHandle) tableHandle).stream()
+    //     return getColumns(session, jdbcClient, (JdbcTableHandle) tableHandle).stream()
+    //             .collect(toImmutableMap(columnHandle -> columnHandle.getColumnMetadata().getName(), identity()));
+    // }
 
     @Override
     public Optional<ProjectionApplicationResult<ConnectorTableHandle>> applyProjection(
