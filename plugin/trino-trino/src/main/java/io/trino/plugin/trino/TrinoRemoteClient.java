@@ -187,6 +187,7 @@ public class TrinoRemoteClient
     private final AggregateFunctionRewriter<JdbcExpression, ?> aggregateFunctionRewriter;
     private static final Pattern NESTED_DATA_TYPE_METADATA_ESCAPE_PATTERN = Pattern.compile("(\\s*)(?<fieldname>(\\w(\\.\\w)*)+)(?=(\\s+\\w))");
     private final ConnectorExpressionRewriter<ParameterizedExpression> connectorExpressionRewriter;
+    // private final ProjectFunctionRewriter<JdbcExpression, ParameterizedExpression> projectFunctionRewriter;
 
     @Inject
     public TrinoRemoteClient(
@@ -256,6 +257,12 @@ public class TrinoRemoteClient
                         .add(new ImplementRegrIntercept())
                         .add(new ImplementRegrSlope())
                         .build());
+
+        // this.projectFunctionRewriter = new ProjectFunctionRewriter<>(
+        //         this.connectorExpressionRewriter,
+        //         ImmutableSet.<ProjectFunctionRule<JdbcExpression, ParameterizedExpression>>builder()
+        //                 .flatMap(parExp -> convertType(expression.getType()).map(type -> new JdbcExpression(parExp.expression(), parExp.parameters(), type)));
+        //                 .build());
     }
 
     @Override
@@ -280,7 +287,9 @@ public class TrinoRemoteClient
     @Override
     public Optional<JdbcExpression> convertProjection(ConnectorSession session, JdbcTableHandle handle, ConnectorExpression expression, Map<String, ColumnHandle> assignments)
     {
-        return projectFunctionRewriter.rewrite(session, handle, expression, assignments);
+        return connectorExpressionRewriter.rewrite(session, expression, assignments)
+                .flatMap(parExp -> convertType(expression.getType()).map(type -> new JdbcExpression(parExp.expression(), parExp.parameters(), type)));
+        // return projectFunctionRewriter.rewrite(session, handle, expression, assignments);
     }
 
     @Override
