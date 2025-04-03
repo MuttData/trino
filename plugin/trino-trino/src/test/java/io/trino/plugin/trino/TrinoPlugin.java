@@ -26,8 +26,6 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
-@TestInstance(PER_CLASS)
-@Execution(CONCURRENT)
 public class TestTrinoPlugin
 {
     @Test
