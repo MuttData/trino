@@ -127,7 +127,7 @@ public class TrinoRemoteAuthenticationModule
                 CredentialProvider credentialProvider,
                 OpenTelemetry openTelemetry)
         {
-            CredentialPropertiesProvider<String, String> credentialPropertiesProvider = new DefaultCredentialPropertiesProvider(requireNonNull(credentialProvider, "credentialProvider is null"));
+            CredentialPropertiesProvider credentialPropertiesProvider = new DefaultCredentialPropertiesProvider(requireNonNull(credentialProvider, "credentialProvider is null"));
             Properties properties = new Properties();
             if (trinoRemoteConfig.isSslEnabled()) {
                 setSslProperties(properties, sslConfig);
