@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class TrinoRemoteImpersonateCredentialPropertiesProvider
-        implements CredentialPropertiesProvider<String, String>
+        implements CredentialPropertiesProvider
 {
     private final CredentialProvider credentialProvider;
 
@@ -32,9 +32,10 @@ public class TrinoRemoteImpersonateCredentialPropertiesProvider
         this.credentialProvider = credentialProvider;
     }
 
-    public Map<String, String> getCredentialProperties(ConnectorIdentity identity)
+    @Override
+    public Map<String, Object> getCredentialProperties(ConnectorIdentity identity)
     {
-        Builder<String, String> properties = ImmutableMap.<String, String>builder();
+        ImmutableMap.Builder<String, Object> properties = ImmutableMap.builder();
         credentialProvider.getConnectionUser(Optional.of(identity)).ifPresent((user) -> {
             properties.put("user", user);
         });
