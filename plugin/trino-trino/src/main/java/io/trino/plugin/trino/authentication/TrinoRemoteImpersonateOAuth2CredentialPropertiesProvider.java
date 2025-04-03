@@ -36,7 +36,7 @@ public class TrinoRemoteImpersonateOAuth2CredentialPropertiesProvider
     }
 
     @Override
-    public Map<String, String> getCredentialProperties(ConnectorIdentity identity)
+    public Map<String, Object> getCredentialProperties(ConnectorIdentity identity)
     {
         Builder<String, String> properties = ImmutableMap.<String, String>builder();
         ImmutableMap.Builder<String, Object> properties = ImmutableMap.builder();
