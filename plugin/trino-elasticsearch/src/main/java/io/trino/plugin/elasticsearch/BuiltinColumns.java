@@ -75,12 +75,12 @@ enum BuiltinColumns
         return type;
     }
 
-    public ColumnMetadata getMetadata()
+    public ColumnMetadata getMetadata(boolean hidden)
     {
         return ColumnMetadata.builder()
                 .setName(name)
                 .setType(type)
-                .setHidden(true)
+                .setHidden(hidden)
                 .build();
     }
 

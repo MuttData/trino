@@ -157,6 +157,7 @@ public class ElasticsearchMetadata
     private final Type ipAddressType;
     private final ElasticsearchClient client;
     private final String schemaName;
+    private final boolean hideInternalColumns;
 
     @Inject
     public ElasticsearchMetadata(TypeManager typeManager, ElasticsearchClient client, ElasticsearchConfig config)
@@ -164,6 +165,7 @@ public class ElasticsearchMetadata
         this.ipAddressType = typeManager.getType(new TypeSignature(StandardTypes.IPADDRESS));
         this.client = requireNonNull(client, "client is null");
         this.schemaName = config.getDefaultSchema();
+        this.hideInternalColumns = config.isHideInternalColumns();
     }
 
     @Override
@@ -245,7 +247,7 @@ public class ElasticsearchMetadata
         ImmutableList.Builder<ColumnMetadata> result = ImmutableList.builder();
 
         for (BuiltinColumns builtinColumn : BuiltinColumns.values()) {
-            result.add(builtinColumn.getMetadata());
+            result.add(builtinColumn.getMetadata(hideInternalColumns));
         }
 
         for (IndexMetadata.Field field : fields) {
@@ -424,7 +426,7 @@ public class ElasticsearchMetadata
         }
 
         return BuiltinColumns.of(column.name())
-                .map(BuiltinColumns::getMetadata)
+                .map(builtinColumn -> builtinColumn.getMetadata(hideInternalColumns))
                 .orElse(ColumnMetadata.builder()
                         .setName(column.name())
                         .setType(column.type())
