@@ -67,6 +67,7 @@ public class ElasticsearchConfig
     private Duration nodeRefreshInterval = new Duration(1, MINUTES);
     private int maxHttpConnections = 25;
     private int httpThreadCount = Runtime.getRuntime().availableProcessors();
+    private boolean hideInternalColumns = true;
 
     private boolean tlsEnabled;
     private File keystorePath;
@@ -254,6 +255,19 @@ public class ElasticsearchConfig
     public int getHttpThreadCount()
     {
         return httpThreadCount;
+    }
+
+    public boolean isHideInternalColumns()
+    {
+        return hideInternalColumns;
+    }
+
+    @Config("elasticsearch.hide-internal-columns")
+    @ConfigDescription("Whether internal columns are shown in table metadata or not. Default is true")
+    public ElasticsearchConfig setHideInternalColumns(boolean hideInternalColumns)
+    {
+        this.hideInternalColumns = hideInternalColumns;
+        return this;
     }
 
     public boolean isTlsEnabled()
