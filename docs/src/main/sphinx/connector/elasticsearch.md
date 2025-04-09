@@ -85,6 +85,9 @@ The following table details all general configuration properties:
     queries. Some deployments map Elasticsearch ports to a random public port
     and enabling this property can help in these cases.
   - `false`
+* - `elasticsearch.hide-internal-columns`
+  - Whether [hidden or special columns](special-columns) are shown in table metadata or not.
+  - `false`
 :::
 
 ### Authentication
